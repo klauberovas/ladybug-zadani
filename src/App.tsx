@@ -4,35 +4,50 @@ import { Direction } from './components/Ladybug';
 
 const STEP_SIZE = 25;
 
-export const App: React.FC = () => {
-  const [posX, setPosX] = useState<number>(100);
-  const [posY, setPosY] = useState<number>(100);
-  const [orientation, setOrientation] = useState<Direction>(Direction.right);
+export interface LadyBug {
+  posX: number;
+  posY: number;
+  orientation: Direction;
+}
 
-  const handleKeyUp = ({ code }:React.KeyboardEvent<HTMLDivElement>) => {
-    if (code === 'ArrowUp') {
-      setOrientation(Direction.up);
-      setPosX(posX - STEP_SIZE);
-    } else if (code === 'ArrowLeft') {
-      setOrientation(Direction.left);
-      setPosY(posY - STEP_SIZE);
-    } else if (code === 'ArrowRight') {
-      setOrientation(Direction.right);
-      setPosY(posY + STEP_SIZE);
-    } else if (code === 'ArrowDown') {
-      setOrientation(Direction.down);
-      setPosX(posX + STEP_SIZE);
+interface KeyToDirection {
+  [key: string]: {
+    orientation: Direction;
+    posX: number;
+    posY: number;
+  };
+}
+
+const keyToDirection: KeyToDirection = {
+  ArrowUp: { orientation: Direction.up, posX: -STEP_SIZE, posY: 0 },
+  ArrowDown: { orientation: Direction.down, posX: STEP_SIZE, posY: 0 },
+  ArrowLeft: { orientation: Direction.left, posX: 0, posY: -STEP_SIZE },
+  ArrowRight: { orientation: Direction.right, posX: 0, posY: STEP_SIZE },
+};
+
+export const App: React.FC = () => {
+  const [ladyBugState, setLadyBugState] = useState<LadyBug>({
+    posX: 100,
+    posY: 100,
+    orientation: Direction.right,
+  });
+
+  const handleKeyUp = ({ code }: React.KeyboardEvent<HTMLDivElement>) => {
+    const direction = keyToDirection[code];
+    if (direction) {
+      setLadyBugState({
+        ...ladyBugState,
+        orientation: direction.orientation,
+        posX: ladyBugState.posX + direction.posX,
+        posY: ladyBugState.posY + direction.posY,
+      });
     }
   };
 
   return (
-    <div
-      tabIndex={-1}
-      className="field"
-      onKeyDown={handleKeyUp}
-    >
+    <div tabIndex={-1} className="field" onKeyDown={handleKeyUp}>
       <header>Click anywhere to start the game</header>
-      <Ladybug posX={posX} posY={posY} orientation={orientation} />
+      <Ladybug position={ladyBugState} />
     </div>
   );
 };
