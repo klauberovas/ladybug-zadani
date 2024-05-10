@@ -1,17 +1,12 @@
 import { useState } from 'react';
 import Ladybug from './components/Ladybug';
 import { Direction } from './components/Ladybug';
+import { ILadybug } from './components/Ladybug';
 
 const STEP_SIZE = 25;
 
-export interface LadyBug {
-  posX: number;
-  posY: number;
-  orientation: Direction;
-}
-
 export const App: React.FC = () => {
-  const [ladyBug, setLadyBug] = useState<LadyBug>({
+  const [ladyBug, setLadyBug] = useState<ILadybug>({
     posX: 100,
     posY: 100,
     orientation: Direction.right,
