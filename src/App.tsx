@@ -10,36 +10,37 @@ export interface LadyBug {
   orientation: Direction;
 }
 
-interface KeyToDirection {
-  [key: string]: {
-    orientation: Direction;
-    posX: number;
-    posY: number;
-  };
-}
-
-const keyToDirection: KeyToDirection = {
-  ArrowUp: { orientation: Direction.up, posX: -STEP_SIZE, posY: 0 },
-  ArrowDown: { orientation: Direction.down, posX: STEP_SIZE, posY: 0 },
-  ArrowLeft: { orientation: Direction.left, posX: 0, posY: -STEP_SIZE },
-  ArrowRight: { orientation: Direction.right, posX: 0, posY: STEP_SIZE },
-};
-
 export const App: React.FC = () => {
-  const [ladyBugState, setLadyBugState] = useState<LadyBug>({
+  const [ladyBug, setLadyBug] = useState<LadyBug>({
     posX: 100,
     posY: 100,
     orientation: Direction.right,
   });
 
   const handleKeyUp = ({ code }: React.KeyboardEvent<HTMLDivElement>) => {
-    const direction = keyToDirection[code];
-    if (direction) {
-      setLadyBugState({
-        ...ladyBugState,
-        orientation: direction.orientation,
-        posX: ladyBugState.posX + direction.posX,
-        posY: ladyBugState.posY + direction.posY,
+    if (code === 'ArrowUp') {
+      setLadyBug({
+        ...ladyBug,
+        orientation: Direction.up,
+        posX: ladyBug.posX - STEP_SIZE,
+      });
+    } else if (code === 'ArrowLeft') {
+      setLadyBug({
+        ...ladyBug,
+        orientation: Direction.left,
+        posY: ladyBug.posY - STEP_SIZE,
+      });
+    } else if (code === 'ArrowRight') {
+      setLadyBug({
+        ...ladyBug,
+        orientation: Direction.right,
+        posY: ladyBug.posY + STEP_SIZE,
+      });
+    } else if (code === 'ArrowDown') {
+      setLadyBug({
+        ...ladyBug,
+        orientation: Direction.left,
+        posX: ladyBug.posX + STEP_SIZE,
       });
     }
   };
@@ -47,7 +48,11 @@ export const App: React.FC = () => {
   return (
     <div tabIndex={-1} className="field" onKeyDown={handleKeyUp}>
       <header>Click anywhere to start the game</header>
-      <Ladybug position={ladyBugState} />
+      <Ladybug
+        posX={ladyBug.posX}
+        posY={ladyBug.posY}
+        orientation={ladyBug.orientation}
+      />
     </div>
   );
 };

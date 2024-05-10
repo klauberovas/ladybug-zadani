@@ -1,5 +1,4 @@
 import './style.css';
-import { LadyBug } from '../../App';
 
 export enum Direction {
   up = 'up',
@@ -9,16 +8,18 @@ export enum Direction {
 }
 
 interface ILadybug {
-  position: LadyBug;
+  orientation: string;
+  posX: number;
+  posY: number;
 }
 
-export const Ladybug: React.FC<ILadybug> = ({ position }) => {
+export const Ladybug: React.FC<ILadybug> = ({ orientation, posX, posY }) => {
   return (
     <div
-      className={`ladybug ladybug--${position.orientation}`}
+      className={`ladybug ladybug--${orientation}`}
       style={{
-        top: `${position.posX}px`,
-        left: `${position.posY}px`,
+        top: `${posX}px`,
+        left: `${posY}px`,
       }}
     />
   );
