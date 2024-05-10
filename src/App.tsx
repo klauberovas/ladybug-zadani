@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Ladybug from './components/Ladybug';
 import { Direction } from './components/Ladybug';
 import { ILadybug } from './components/Ladybug';
@@ -12,7 +12,7 @@ export const App: React.FC = () => {
     orientation: Direction.right,
   });
 
-  const handleKeyUp = ({ code }: React.KeyboardEvent<HTMLDivElement>) => {
+  const handleKeyUp = ({ code }: KeyboardEvent) => {
     if (code === 'ArrowUp') {
       setLadyBug({
         ...ladyBug,
@@ -34,14 +34,21 @@ export const App: React.FC = () => {
     } else if (code === 'ArrowDown') {
       setLadyBug({
         ...ladyBug,
-        orientation: Direction.left,
+        orientation: Direction.down,
         posX: ladyBug.posX + STEP_SIZE,
       });
     }
   };
 
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyUp);
+    return () => {
+      document.removeEventListener('keydown', handleKeyUp);
+    };
+  }, [ladyBug]);
+
   return (
-    <div tabIndex={-1} className="field" onKeyDown={handleKeyUp}>
+    <div tabIndex={-1} className="field">
       <header>Click anywhere to start the game</header>
       <Ladybug
         posX={ladyBug.posX}
